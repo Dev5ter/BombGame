@@ -11,11 +11,11 @@ struct bomb_t{
             ExplosiveWire[0] = ExplosiveWire[1] = DefuseWire[0] = DefuseWire[1] = "";
             for(int i=0; i<3; i++) for(int x=0; x<3; x++) wireOptions[i][x] = '~';
             dice[0] = "Cut Wire";
-            dice[1] = "";
-            dice[2] = "";
-            dice[3] = "";
-            dice[4] = "";
-            dice[5] = "";
+            dice[1] = "Cut Wire";
+            dice[2] = "Clue";
+            dice[3] = "Clue";
+            dice[4] = "Clue & Cut Wire";
+            dice[5] = "Clue & Opponent Force Cut";
         }
 
         void setWires();
@@ -28,6 +28,13 @@ struct bomb_t{
         string getExplosive(){return (ExplosiveWire[0] + " " + ExplosiveWire[1]);}
         string getDefuse(){return (DefuseWire[0] + " " + DefuseWire[1]);}
         char getWO(int i, int x){return wireOptions[i][x];}
+        char getWO(string s);
+
+        int rollDice(){return rand()%5;}
+        string textDice(int i){return dice[i];}
+
+        string giveClue(){return dice[rand()%5];}
+        void cutWire(int &gameOver);
 
         void printOneClue();
         void printAllClues();

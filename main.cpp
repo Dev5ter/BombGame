@@ -9,12 +9,16 @@ using namespace std;
 
 bool setSeed(int argc, char* argv[]);
 bomb_t setUpBomb();
+void theMainGame(bomb_t TNT);
 void printSolution(bomb_t TNT);
 
 int main(int argc, char* argv[]){
     if(!setSeed(argc, argv)) return 1;
     
     bomb_t TNT = setUpBomb();
+
+    theMainGame(TNT);
+
     printSolution(TNT);
     TNT.printOneClue();
     TNT.printAllClues();
@@ -47,4 +51,16 @@ void printSolution(bomb_t TNT){
     printf(" R                  \n\n");
     printf("Explosive Wire: %s\n", TNT.getExplosive().c_str());
     printf("Defuse Wire:    %s\n", TNT.getDefuse().c_str());
+}
+
+void theMainGame(bomb_t TNT){
+    int player;
+    cout << "Are you Player 1/2?\n";
+    cin >> player; bool liveBomb = true;
+    bool yourTurn = player-1 ? false : true;
+    while(liveBomb){
+        while(yourTurn){
+            yourTurn = liveBomb = false;
+        }
+    }
 }

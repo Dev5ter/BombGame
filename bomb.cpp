@@ -64,3 +64,38 @@ void bomb_t::printAllClues(){
     printf("The Clues:\n");
     for(int i=0; i<(int)clues.size(); i++) printf("\t%s\n",clues[i].c_str());
 }
+
+void bomb_t::cutWire(int &gameOver){
+    string desire;
+    cout << "Which wire are you going to cut? (CS)\n";
+    cin >> desire;
+
+    char gottem = getWO(desire);
+    while(gottem == 'L'){
+        printf("Invalid Wire\n");
+        cin>>desire; getWO(desire);
+    }
+    while(gottem == 'c'){
+        printf("Wire Already Cut\n");
+        cin>>desire; getWO(desire);
+    }
+    switch(gottem){
+        case '~': printf("Nothing Happens...\n"); gameOver = 0; break;
+        case 'X': printf("BOOM!!!!!! You lose\n"); gameOver = 1; break;
+        case 'D': printf("The Bomb Loses Power!!! You win\n"); gameOver = 2; break;
+        default: printf("Something is wrong in switch GOTTEM\n");
+    }
+}
+
+char bomb_t::getWO(string s){
+    if(s == "RT") return wireOptions[0][0];
+    if(s == "RC") return wireOptions[0][1];
+    if(s == "RS") return wireOptions[0][2];
+    if(s == "BT") return wireOptions[1][0];
+    if(s == "BC") return wireOptions[1][1];
+    if(s == "BS") return wireOptions[1][2];
+    if(s == "GT") return wireOptions[2][0];
+    if(s == "GC") return wireOptions[2][1];
+    if(s == "GS") return wireOptions[2][2];
+    return 'L';
+}
