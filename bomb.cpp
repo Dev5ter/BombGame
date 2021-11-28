@@ -65,25 +65,45 @@ void bomb_t::printAllClues(){
     for(int i=0; i<(int)clues.size(); i++) printf("\t%s\n",clues[i].c_str());
 }
 
-void bomb_t::cutWire(int &gameOver){
-    string desire;
-    cout << "Which wire are you going to cut? (CS)\n";
-    cin >> desire;
+void bomb_t::cutWire(int &gameOver, bool force, bool yt){
+    string desire = "";
+    if(yt && !force){
+        cout << "Which wire are you going to cut? (CS)\n";
+        cin >> desire;
+    }else if(!yt && !force){
+        cout << "Which wire did they cut? (CS)\n";
+        cin >> desire;
+    }else if(yt && force){
+        cout << "Which wire are you forcing them to cut? (CS)\n";
+        cin >> desire;
+    }else{ /* !yt && force*/
+        cout << "Which wire are you forced to cut? (CS)\n";
+        cin >> desire;
+    }
 
     char gottem = getWO(desire);
     while(gottem == 'L'){
-        printf("Invalid Wire\n");
+        printf("Invalid Wire (%s)\n", desire.c_str());
         cin>>desire; getWO(desire);
     }
     while(gottem == 'c'){
         printf("Wire Already Cut\n");
         cin>>desire; getWO(desire);
     }
-    switch(gottem){
-        case '~': printf("Nothing Happens...\n"); gameOver = 0; break;
-        case 'X': printf("BOOM!!!!!! You lose\n"); gameOver = 1; break;
-        case 'D': printf("The Bomb Loses Power!!! You win\n"); gameOver = 2; break;
-        default: printf("Something is wrong in switch GOTTEM\n");
+    if((yt && !force) || (!yt && force)){
+        switch(gottem){
+            case '~': printf("Nothing Happens...\n"); gameOver = 0; break;
+            case 'X': printf("BOOM!!!!!! You lose\n"); gameOver = 1; break;
+            case 'D': printf("The Bomb Loses Power!!! You win\n"); gameOver = 2; break;
+            default: printf("Something is wrong in switch GOTTEM\n");
+        }
+    }else{
+        switch(gottem){
+            case '~': printf("Nothing Happens...\n"); gameOver = 0; break;
+            case 'X': printf("BOOM!!!!!! You WIN\n"); gameOver = 1; break;
+            case 'D': printf("The Bomb Loses Power!!! You LOSE\n"); gameOver = 2; break;
+            default: printf("Something is wrong in switch GOTTEM\n");
+        }
     }
 }
 
@@ -98,4 +118,36 @@ char bomb_t::getWO(string s){
     if(s == "GC") return wireOptions[2][1];
     if(s == "GS") return wireOptions[2][2];
     return 'L';
+}
+
+void bomb_t::printSolution(){
+    printf("            Shape   \n");
+    printf("        | T | C | S |\n");
+    printf(" C                  \n");
+    printf(" O   |R|  %c   %c   %c\n", getWO(0,0), getWO(0,1), getWO(0,2));
+    printf(" L   |B|  %c   %c   %c\n", getWO(1,0), getWO(1,1), getWO(1,2));
+    printf(" O   |G|  %c   %c   %c\n", getWO(2,0), getWO(2,1), getWO(2,2));
+    printf(" R                  \n\n");
+    printf("Explosive Wire: %s\n", getExplosive().c_str());
+    printf("Defuse Wire:    %s\n", getDefuse().c_str());
+}
+
+void bomb_t::diceToAction1(int i, int& go){
+    switch(i){
+        case 0: case 1: cutWire(go, false, true); break;
+        case 2: case 3: printOneClue(); break;
+        case 4: printOneClue(); cutWire(go, false, true); break;
+        case 5: printOneClue(); cutWire(go, true, true); break;
+    }
+}
+
+void bomb_t::diceToAction2(int i, int& go){
+    int temp = 0;
+    switch(i){
+        case 0: case 1: cutWire(go, false, false); break;
+        case 2: case 3: temp = rand()%6; break;
+        case 4: temp = rand()%6; cutWire(go, false, false); break;
+        case 5: temp = rand()%6; cutWire(go, true, false); break;
+    }
+    temp--;
 }

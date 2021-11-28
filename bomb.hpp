@@ -23,6 +23,7 @@ struct bomb_t{
         void setDF(string a, string b){ DefuseWire[0] = a; DefuseWire[1] = b;}
         void setOptions(int i, int x, char t){wireOptions[i][x] = t;}
         void setClues();
+        void printSolution();
 
         string intToString(int m, int i);
         string getExplosive(){return (ExplosiveWire[0] + " " + ExplosiveWire[1]);}
@@ -30,11 +31,14 @@ struct bomb_t{
         char getWO(int i, int x){return wireOptions[i][x];}
         char getWO(string s);
 
-        int rollDice(){return rand()%5;}
+        int rollDice(){return rand()%6;}
         string textDice(int i){return dice[i];}
 
-        string giveClue(){return dice[rand()%5];}
-        void cutWire(int &gameOver);
+        string giveClue(){return dice[rand()%6];}
+        void cutWire(int &gameOver, bool, bool);
+
+        void diceToAction1(int i, int& go);
+        void diceToAction2(int i, int& go);
 
         void printOneClue();
         void printAllClues();

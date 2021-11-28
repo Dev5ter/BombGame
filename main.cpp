@@ -10,7 +10,7 @@ using namespace std;
 bool setSeed(int argc, char* argv[]);
 bomb_t setUpBomb();
 void theMainGame(bomb_t TNT);
-void printSolution(bomb_t TNT);
+void turnOfGame(bomb_t TNT, int& go, bool& yourTurn);
 
 int main(int argc, char* argv[]){
     if(!setSeed(argc, argv)) return 1;
@@ -19,9 +19,9 @@ int main(int argc, char* argv[]){
 
     theMainGame(TNT);
 
-    printSolution(TNT);
-    TNT.printOneClue();
+    TNT.printSolution();
     TNT.printAllClues();
+
     return 0;
 }
 
@@ -41,26 +41,30 @@ bomb_t setUpBomb(){
     return b;
 }
 
-void printSolution(bomb_t TNT){
-    printf("            Shape   \n");
-    printf("        | T | C | S |\n");
-    printf(" C                  \n");
-    printf(" O   |R|  %c   %c   %c\n", TNT.getWO(0,0), TNT.getWO(0,1), TNT.getWO(0,2));
-    printf(" L   |B|  %c   %c   %c\n", TNT.getWO(1,0), TNT.getWO(1,1), TNT.getWO(1,2));
-    printf(" O   |G|  %c   %c   %c\n", TNT.getWO(2,0), TNT.getWO(2,1), TNT.getWO(2,2));
-    printf(" R                  \n\n");
-    printf("Explosive Wire: %s\n", TNT.getExplosive().c_str());
-    printf("Defuse Wire:    %s\n", TNT.getDefuse().c_str());
+void theMainGame(bomb_t TNT){
+    int gameOver = 0; int player;
+    cout << "Are you player 1/2?\n";
+    cin >> player;
+    bool yourTurn = !(player-1);
+    while(!gameOver) turnOfGame(TNT, gameOver, yourTurn);
+    
 }
 
-void theMainGame(bomb_t TNT){
-    int player;
-    cout << "Are you Player 1/2?\n";
-    cin >> player; bool liveBomb = true;
-    bool yourTurn = player-1 ? false : true;
-    while(liveBomb){
-        while(yourTurn){
-            yourTurn = liveBomb = false;
-        }
+void turnOfGame(bomb_t TNT, int& go, bool& yourTurn){
+    //Rolling of the dice
+    int dice; char trash;
+    if(yourTurn){
+        dice = TNT.rollDice();
+        printf("You rolled '%s' on the dice!\n", TNT.textDice(dice).c_str());
+        TNT.diceToAction1(dice, go);
+    }else{
+        dice = TNT.rollDice();
+        printf("They rolled '%s' on the dice!\n", TNT.textDice(dice).c_str());
+        TNT.diceToAction2(dice, go);
     }
+
+    yourTurn = !yourTurn;
+
+    cout << "Press and Enter any key to move on to the next turn!\n";
+    cin >> trash;
 }
