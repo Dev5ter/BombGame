@@ -44,9 +44,14 @@ bomb_t setUpBomb(){
 void theMainGame(bomb_t TNT){
     int gameOver = 0; int player;
     cout << "Are you player 1/2?\n";
-    cin >> player;
+    cin >> player; int round = 1; bool bo = false;
     bool yourTurn = !(player-1);
-    while(!gameOver) turnOfGame(TNT, gameOver, yourTurn);
+    while(!gameOver){
+        printf("Round %d: ", round);
+        turnOfGame(TNT, gameOver, yourTurn);
+        if(bo) round++;
+        bo = !bo;
+    }
     
 }
 

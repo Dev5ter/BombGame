@@ -84,11 +84,11 @@ void bomb_t::cutWire(int &gameOver, bool force, bool yt){
     char gottem = getWO(desire);
     while(gottem == 'L'){
         printf("Invalid Wire (%s)\n", desire.c_str());
-        cin>>desire; getWO(desire);
+        cin>>desire; gottem = getWO(desire);
     }
     while(gottem == 'c'){
         printf("Wire Already Cut\n");
-        cin>>desire; getWO(desire);
+        cin>>desire; gottem = getWO(desire);
     }
     if((yt && !force) || (!yt && force)){
         switch(gottem){
